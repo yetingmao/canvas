@@ -33,7 +33,7 @@ class Mark extends Component {
 
     }
     componentDidMount() {
-        const src = `jpg`;
+        const src = `http://169.254.112.82:8001/timg.jpg`;
         this.init(src);
         document.addEventListener("keydown", (e) => { this.keydown(e, this) });
     }
@@ -55,10 +55,11 @@ class Mark extends Component {
                                 //  onMouseUp={e => this.mouseUpListener(e)}
                                 onMouseDown={e => this.mouseDownMark(e)}
                                 onMouseMove={e => this.mouseMoveMark(e)}
+                                onWheel={e => this.changeScale(undefined, e)}
                             >
                                 你的浏览器不支持canvas,请使用高版本chrome浏览器
                             </canvas >
-                            <img id="canvas_img" crossOrigin="anonymous" ref={ref => (this.imgRef = ref)} src="" alt="" />
+                            <img id="canvas_img" crossOrigin="anonymous" ref={ref => (this.imgRef = ref)} src="http://169.254.112.82:8001/timg.jpg" alt="" />
                         </div>
                         <div className="mark_action">
                             <div className="action_add">
@@ -440,23 +441,41 @@ class Mark extends Component {
      * @return: 
      * @author: yetm
      */
-    changeScale(type) {
+    changeScale(type, e) {
         const { canvas } = this.state;
         let width, height;
-        if (type === "plus") {
-            if (this.scale > 2) {
-                message.warning('已放大到最大宽度');
-                return;
+        if (typeof e === "undefined") {
+            if (type === "plus") {
+                if (this.scale > 2) {
+                    message.warning('已放大到最大宽度');
+                    return;
+                }
+                width = canvas.width * this.scaleStep;
+                height = canvas.height * this.scaleStep;
+            } else {
+                if (this.scale <= 1) {
+                    message.warning('已经是原本图片大小');
+                    return;
+                }
+                width = canvas.width / this.scaleStep;
+                height = canvas.height / this.scaleStep;
             }
-            width = canvas.width * this.scaleStep;
-            height = canvas.height * this.scaleStep;
         } else {
-            if (this.scale <= 1) {
-                message.warning('已经是原本图片大小');
-                return;
+            e.persist();
+            const { deltaY } = e;
+            if (deltaY > 0) {
+                if (this.scale <= 1) {
+                    return;
+                }
+                width = canvas.width / this.scaleStep;
+                height = canvas.height / this.scaleStep;
+            } else {
+                if (this.scale > 2) {
+                    return;
+                }
+                width = canvas.width * this.scaleStep;
+                height = canvas.height * this.scaleStep;
             }
-            width = canvas.width / this.scaleStep;
-            height = canvas.height / this.scaleStep;
         }
         this.setState(
             {
