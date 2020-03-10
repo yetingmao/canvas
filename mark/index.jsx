@@ -612,6 +612,60 @@ class Mark extends Component {
 
     };
     /**
+    * @description: 下载方法
+    * @param {type} 文件链接可以是一个dataURL 也可以是一个 blob 对象
+    * @return: 
+    * @author: yetm
+    */
+    downloadImg(imgSrc, imgName) {
+        const elem = document.createElement('a');
+        elem.setAttribute('href', imgSrc);
+        elem.setAttribute('download', imgName);
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    }
+    /**
+    * @description: 下载
+    * @param {type}
+    * @return:
+    * @author: yetm
+    */
+    // downLoad() {
+    //     try {
+    //         const marks = JSON.parse(localStorage.getItem("marks"));
+    //         const canvas = document.createElement("canvas");
+    //         const width = this.img.width;
+    //         const height = this.img.height;
+    //         const rate = 1; //(width < height ? width / height : height / width) / 4;
+    //         canvas.width = width * rate;
+    //         canvas.height = height * rate;
+    //         console.log("canvas", canvas);
+    //         const ctx = canvas.getContext("2d");
+    //         // 按比例压缩倍
+    //         ctx.drawImage(this.img, 0, 0, width, height, 0, 0, width * rate, height * rate);
+    //         for (let key in marks) {
+    //             if (marks.hasOwnProperty(key)) {
+    //                 ctx.beginPath();
+    //                 const mark = marks[key];
+    //                 const { x1, y1, width, height, strokeStyle, scale } = mark;
+    //                 ctx.rect(x1, y1, width / scale, height / scale);
+    //                 ctx.strokeStyle = strokeStyle;
+    //                 ctx.stroke();
+    //             }
+    //         }
+    //         canvas.toBlob((blob) => {
+    //             let imgSrc = window.URL.createObjectURL(blob);
+    //             let imgName = `${new Date().getTime()}.jpg`;
+    //             this.downloadImg(imgSrc, imgName);
+    //             window.URL.revokeObjectURL(imgSrc);
+    //         }, 'image/jpg', 0.9);
+    //     }
+    //     catch (err) {
+    //         console.log(111, err);
+    //     }
+    // };
+    /**
      * @description: 删除
      * @param {type} 
      * @return: 
